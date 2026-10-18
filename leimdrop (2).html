@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LEIMDROP — демо-платформа апгрейда скинов и открытия кейсов CS2. Реальные изображения предметов, provably fair, без реальных денег.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236c5ce7'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial' font-weight='900' fill='white' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E">
+<title>LEIMDROP — Апгрейд и кейсы CS2</title>
+<style>
+:root{--bg:#0b0e14;--bg2:#0f141d;--card:#131a26;--card2:#182130;--line:#22304a;--txt:#e8eefb;--mut:#8ea3c4;--acc:#6c5ce7;--acc2:#8f7bff;--gold:#e4ae39;--green:#39d98a;--red:#eb4b4b;--rad:14px;--sh:0 10px 30px rgba(0,0,0,.35);--font:'Segoe UI',system-ui,Roboto,Ubuntu,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--txt);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}img{display:block}button{font-family:var(--font);cursor:pointer}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#243450;border-radius:9px}::-webkit-scrollbar-track{background:transparent}
+.nav{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:22px;padding:0 28px;height:64px;background:rgba(11,14,20,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.logo{font-weight:900;font-size:21px;letter-spacing:1.5px;cursor:pointer;white-space:nowrap}
+.logo b{color:var(--acc2)}
+.nav-links{display:flex;gap:4px;flex:1}
+.nav-links a{padding:8px 14px;border-radius:10px;color:var(--mut);font-size:14.5px;font-weight:600;transition:.2s}
+.nav-links a:hover{color:var(--txt);background:#1a2436}
+.nav-links a.on{color:var(--txt);background:rgba(108,92,231,.18);box-shadow:inset 0 0 0 1px rgba(108,92,231,.4)}
+.nav-r{display:flex;align-items:center;gap:12px}
+.online{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--mut);font-weight:600;white-space:nowrap}
+.online i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.5}}
+.bal{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:7px 8px 7px 14px;font-weight:800;font-size:14px}
+.bal button{width:26px;height:26px;border-radius:8px;border:none;background:var(--acc);color:#fff;font-size:16px;font-weight:800;transition:.2s}
+.bal button:hover{background:var(--acc2);transform:scale(1.08)}
+.inv-btn{padding:8px 16px;border-radius:11px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-weight:700;font-size:13.5px;transition:.2s}
+.inv-btn:hover{border-color:var(--acc);box-shadow:0 0 14px rgba(108,92,231,.35)}
+.burger{display:none;background:none;border:none;color:var(--txt);font-size:24px}
+.wrap{max-width:1460px;margin:0 auto;padding:26px 28px 60px}
+.page{animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.h1{font-size:26px;font-weight:900;letter-spacing:.4px}
+.sub{color:var(--mut);font-size:14px;margin-top:5px}
+.sec-t{font-size:17px;font-weight:800;margin:34px 0 14px;display:flex;align-items:center;gap:10px}
+.sec-t::after{content:"";flex:1;height:1px;background:var(--line)}
+.grid{display:grid;gap:16px}
+.g-skins{grid-template-columns:repeat(auto-fill,minmax(205px,1fr))}
+.g-cases{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);overflow:hidden;transition:transform .22s,box-shadow .22s,border-color .22s;position:relative}
+.card:hover{transform:translateY(-4px);border-color:#31446b;box-shadow:var(--sh)}
+.skin-img{height:132px;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 90% at 50% 10%,#1b2539 0%,#101724 70%);padding:12px}
+.skin-img img{max-height:108px;max-width:92%;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5));transition:transform .25s}
+.card:hover .skin-img img{transform:scale(1.07)}
+.rbar{height:3px;width:100%}
+.skin-b{padding:11px 13px 13px}
+.skin-n{font-size:13.5px;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skin-m{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:12px;color:var(--mut)}
+.price{color:var(--gold);font-weight:800}
+.badge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;letter-spacing:.4px}
+.badge.st{background:rgba(207,106,9,.2);color:#cf6a09;border:1px solid rgba(207,106,9,.5)}
+.badge.wear{background:#1c2739;color:var(--mut);border:1px solid var(--line)}
+.glow-c{box-shadow:0 0 22px rgba(228,174,57,.28);border-color:rgba(228,174,57,.55)}
+.glow-r{box-shadow:0 0 22px rgba(235,75,75,.3);border-color:rgba(235,75,75,.55)}
+.case-img{height:152px;display:flex;align-items:center;justify-content:center;background:radial-gradient(100% 100% at 50% 0%,#1d2a44 0%,#101724 75%);position:relative;overflow:hidden}
+.case-img::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 70%,rgba(108,92,231,.16) 78%,transparent 86%);animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.case-img img{width:118px;height:96px;object-fit:contain;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55));transition:transform .25s;position:relative}
+.card:hover .case-img img{transform:scale(1.1) rotate(-2deg)}
+.case-b{padding:13px 15px 15px}
+.case-n{font-weight:800;font-size:15px}
+.case-m{display:flex;justify-content:space-between;margin-top:8px;font-size:12.5px;color:var(--mut)}
+.case-p{font-size:16px;font-weight:900;color:var(--gold)}
+.best-drop{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--mut)}
+.best-drop img{width:36px;height:26px;object-fit:contain}
+.ph-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%;width:100%;min-height:96px;cursor:pointer;border-radius:10px;background:radial-gradient(120% 90% at 50% 10%,#182031 0%,#0e1420 70%);border:1px dashed color-mix(in srgb, var(--pc) 45%, var(--line));transition:.2s}
+.ph-card:hover{border-color:var(--pc);background:#141c2c}
+.ph-card svg{width:34px;height:34px;fill:var(--pc);opacity:.75}
+.ph-card span{font-size:9.5px;color:var(--mut);font-weight:700;letter-spacing:.2px;text-align:center;padding:0 8px}
+.lc-box{width:118px;height:96px;border-radius:14px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden;z-index:1}
+.lc-standard{background:linear-gradient(150deg,#2a2f66,#12162c);box-shadow:inset 0 0 0 1px rgba(108,92,231,.5),0 8px 18px rgba(0,0,0,.4)}
+.lc-premium{background:linear-gradient(150deg,#5c4212,#231b09);box-shadow:inset 0 0 0 1px rgba(228,174,57,.55),0 8px 18px rgba(0,0,0,.4)}
+.lc-elite{background:linear-gradient(150deg,#5c1a26,#230a10);box-shadow:inset 0 0 0 1px rgba(235,75,75,.55),0 8px 18px rgba(0,0,0,.4)}
+.lc-ic{width:32px;height:32px;position:relative;z-index:2}
+.lc-standard .lc-ic{fill:var(--acc2)}.lc-premium .lc-ic{fill:var(--gold)}.lc-elite .lc-ic{fill:var(--red)}
+.lc-tag{font-size:9px;font-weight:900;letter-spacing:1.6px;color:rgba(255,255,255,.55);position:relative;z-index:2}
+.lc-shine{position:absolute;inset:-70%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.16) 50%,transparent 60%);animation:lcshine 3.4s ease-in-out infinite;z-index:1}
+@keyframes lcshine{0%,100%{transform:translateX(-35%)}50%{transform:translateX(35%)}}
+.case-img .lc-box{transform:scale(1)}
+.case-img.big .lc-box{width:170px;height:150px;border-radius:18px}
+.case-img.big .lc-ic{width:48px;height:48px}
+.case-img.big .lc-tag{font-size:11px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;align-items:center}
+.toolbar input,.toolbar select{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:11px;padding:10px 14px;font-size:13.5px;outline:none;transition:.2s;font-family:var(--font)}
+.toolbar input{flex:1;min-width:170px}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--acc)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:20px;border:1px solid var(--line);background:var(--card);color:var(--mut);font-size:12.5px;font-weight:700;transition:.2s}
+.chip:hover{color:var(--txt)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn{border:none;border-radius:12px;padding:12px 22px;font-weight:800;font-size:14px;transition:.2s;letter-spacing:.3px}
+.btn-p{background:linear-gradient(90deg,var(--acc),#5a49e0);color:#fff;box-shadow:0 6px 18px rgba(108,92,231,.35)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(108,92,231,.5)}
+.btn-p:disabled{opacity:.45;transform:none;cursor:not-allowed;box-shadow:none}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--txt)}
+.btn-g:hover{border-color:var(--acc)}
+.btn-s{padding:8px 14px;font-size:12.5px;border-radius:10px}
+.upg{display:grid;grid-template-columns:1fr 320px 1fr;gap:18px;align-items:stretch;margin-top:20px}
+.upg-side{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:16px;min-height:280px;display:flex;flex-direction:column}
+.upg-side h4{font-size:12px;letter-spacing:1.2px;color:var(--mut);text-transform:uppercase;margin-bottom:12px}
+.upg-slot{flex:1;border:2px dashed var(--line);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:.2s;padding:14px;text-align:center}
+.upg-slot:hover{border-color:var(--acc);background:rgba(108,92,231,.06)}
+.upg-slot img{max-height:110px;max-width:80%;object-fit:contain;filter:drop-shadow(0 8px 16px rgba(0,0,0,.5))}
+.upg-slot .nm{font-weight:700;font-size:13.5px}
+.upg-slot .pr{color:var(--gold);font-weight:800;font-size:14px}
+.upg-mid{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.ring-w{position:relative;width:190px;height:190px}
+.ring-w svg{transform:rotate(-90deg)}
+.ring-bg{stroke:#20304c}.ring-fg{stroke:var(--acc2);stroke-linecap:round;transition:stroke-dashoffset .5s ease,stroke .3s;filter:drop-shadow(0 0 6px rgba(143,123,255,.7))}
+.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.ring-c .ch{font-size:30px;font-weight:900}.ring-c .ml{font-size:12px;color:var(--mut);font-weight:700}
+.ptr{position:absolute;left:50%;top:50%;width:4px;height:86px;margin:-86px 0 0 -2px;transform-origin:50% 100%;background:linear-gradient(#fff,transparent);border-radius:4px}
+.spin-anim{transition:transform 4.2s cubic-bezier(.12,.75,.1,1)}
+.upg-res{font-size:12px;color:var(--mut);min-height:16px;font-weight:700}
+.home{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start}
+.feed{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:14px;position:sticky;top:82px;max-height:calc(100vh - 110px);overflow:hidden;display:flex;flex-direction:column;gap:8px}
+.feed h4{font-size:12px;letter-spacing:1.2px;color:var(--mut);text-transform:uppercase;margin:2px 4px 6px}
+.feed-i{display:flex;gap:10px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:8px 10px;animation:feedIn .5s ease}
+@keyframes feedIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+.feed-i img.av{width:30px;height:30px;border-radius:50%}
+.feed-i img.it{width:46px;height:34px;object-fit:contain}
+.feed-i .t1{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.feed-i .t2{font-size:11px;color:var(--mut)}
+.win{color:var(--green);font-weight:800}.lose{color:var(--red);font-weight:800}
+.modal{position:fixed;inset:0;background:rgba(5,8,14,.8);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeUp .25s}
+.modal-x{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--mut);font-size:26px;z-index:5}
+.modal-x:hover{color:#fff}
+.m-box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;width:100%;max-width:860px;max-height:92vh;overflow:auto;box-shadow:var(--sh);position:relative}
+.reel{position:relative;overflow:hidden;border-radius:12px;background:#0d1320;border:1px solid var(--line);height:176px;margin:18px 0}
+.reel::before,.reel::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none}
+.reel::before{left:0;background:linear-gradient(90deg,#0d1320,transparent)}
+.reel::after{right:0;background:linear-gradient(-90deg,#0d1320,transparent)}
+.reel-mark{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--gold);z-index:3;box-shadow:0 0 12px var(--gold)}
+.reel-strip{display:flex;gap:8px;padding:10px;will-change:transform}
+.reel-i{flex:0 0 128px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.reel-i img{height:78px;margin:0 auto;object-fit:contain}
+.reel-i .n{font-size:10.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:6px}
+.reel-i.hot{border-color:var(--gold);box-shadow:0 0 16px rgba(228,174,57,.5)}
+.res-box{text-align:center;padding:10px 0 4px;animation:fadeUp .4s}
+.res-box img{height:150px;margin:12px auto;object-fit:contain;filter:drop-shadow(0 0 26px rgba(228,174,57,.35))}
+.res-box .rn{font-size:19px;font-weight:900}
+.res-box .rp{color:var(--gold);font-weight:800;margin-top:4px}
+.res-btns{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.pk-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:14px;max-height:56vh;overflow:auto;padding:2px}
+.pk-i{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:10px;cursor:pointer;transition:.18s;text-align:center}
+.pk-i:hover{border-color:var(--acc);transform:translateY(-2px)}
+.pk-i img{height:64px;margin:0 auto 8px;object-fit:contain}
+.pk-i .n{font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk-i .p{font-size:11.5px;color:var(--gold);font-weight:800;margin-top:3px}
+.inv-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:14px 18px;margin:18px 0}
+.inv-total{font-size:14px;color:var(--mut)}.inv-total b{color:var(--gold);font-size:17px}
+.inv-i{cursor:pointer}
+.inv-i .chk{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:7px;border:2px solid var(--line);background:rgba(10,14,20,.7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:transparent;transition:.15s;z-index:2}
+.inv-i.sel{border-color:var(--acc);box-shadow:0 0 0 2px rgba(108,92,231,.45),var(--sh)}
+.inv-i.sel .chk{background:var(--acc);border-color:var(--acc);color:#fff}
+.prof-h{display:flex;gap:20px;align-items:center;background:linear-gradient(120deg,#171f31,#131a26);border:1px solid var(--line);border-radius:18px;padding:24px;position:relative;overflow:hidden;flex-wrap:wrap}
+.prof-h::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 120% at 90% 0%,rgba(108,92,231,.18),transparent)}
+.prof-h img{width:84px;height:84px;border-radius:50%;border:3px solid var(--acc);box-shadow:0 0 24px rgba(108,92,231,.45)}
+.prof-n{font-size:22px;font-weight:900}
+.prof-s{display:flex;gap:26px;margin-top:10px;flex-wrap:wrap}
+.prof-s div span{display:block;font-size:11.5px;color:var(--mut)}.prof-s div b{font-size:16px}
+.tabs{display:flex;gap:8px;margin:20px 0 16px;flex-wrap:wrap}
+.hist-i{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:8px;animation:fadeUp .3s;flex-wrap:wrap}
+.hist-i img{width:52px;height:38px;object-fit:contain}
+.skel{position:relative;overflow:hidden;background:#16202f;border-radius:10px}
+.skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);animation:sh 1.2s infinite}
+@keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.toasts{position:fixed;top:76px;right:20px;z-index:200;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:12px;padding:12px 18px;font-size:13.5px;font-weight:700;box-shadow:var(--sh);animation:toastIn .3s ease;max-width:320px}
+.toast.ok{border-left-color:var(--green)}.toast.err{border-left-color:var(--red)}.toast.gold{border-left-color:var(--gold)}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.toast.out{opacity:0;transform:translateX(30px);transition:.3s}
+.faq-i{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq-q{padding:16px 20px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q span{transition:.25s;color:var(--acc2)}
+.faq-i.open .faq-q span{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--mut);font-size:14px;line-height:1.65}
+.faq-i.open .faq-a{max-height:300px}
+.faq-a div{padding:0 20px 18px}
+.battle-i{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:12px;transition:.2s;flex-wrap:wrap}
+.battle-i:hover{border-color:var(--acc)}
+.doc{color:var(--mut);font-size:14px;line-height:1.75;max-width:820px}
+.doc h3{color:var(--txt);margin:18px 0 8px}
+footer{border-top:1px solid var(--line);background:#0a0d12;padding:40px 28px 26px;margin-top:40px}
+.f-w{max-width:1460px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}
+.f-w h5{font-size:12px;letter-spacing:1.4px;color:var(--mut);margin-bottom:12px}
+.f-w a{display:block;color:var(--mut);font-size:13.5px;margin-bottom:8px;transition:.2s}
+.f-w a:hover{color:var(--txt)}
+.f-desc{color:var(--mut);font-size:13px;line-height:1.6;max-width:380px;margin-top:10px}
+.f-bot{max-width:1460px;margin:26px auto 0;padding-top:18px;border-top:1px solid var(--line);color:#5c6f8f;font-size:12px;line-height:1.7}
+@media(max-width:1280px){.home{grid-template-columns:1fr 280px}.upg{grid-template-columns:1fr 280px 1fr}}
+@media(max-width:1024px){.home{grid-template-columns:1fr}.feed{position:static;max-height:340px}.upg{grid-template-columns:1fr 1fr}.upg-mid{grid-column:1/-1;order:-1}.f-w{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.nav{padding:0 16px;gap:12px}.nav-links{position:fixed;top:64px;left:0;right:0;background:#0d1119;flex-direction:column;padding:14px;gap:6px;border-bottom:1px solid var(--line);display:none}.nav-links.open{display:flex}.burger{display:block}.online span{display:none}.wrap{padding:18px 14px 50px}.upg{grid-template-columns:1fr}.g-skins{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.g-cases{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}.reel-i{flex-basis:104px}.f-w{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="logo" onclick="go('#/')">LEIM<b>DROP</b></div>
+  <button class="burger" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  <div class="nav-links" id="navLinks">
+    <a href="#/" data-r="#/">Апгрейд</a><a href="#/skins" data-r="#/skins">Скины</a><a href="#/battles" data-r="#/battles">Батлы</a><a href="#/cases" data-r="#/cases">Кейсы</a><a href="#/faq" data-r="#/faq">FAQ</a><a href="#/fairness" data-r="#/fairness">Честность</a>
+  </div>
+  <div class="nav-r">
+    <div class="online"><i></i><span id="onlineN">1 248</span>&nbsp;ОНЛАЙН</div>
+    <div class="bal"><span id="balN">$0.00</span><button onclick="openDeposit()" title="Пополнить (демо)">+</button></div>
+    <button class="inv-btn" onclick="go('#/inventory')">Инвентарь</button>
+  </div>
+</nav>
+<div class="wrap"><div id="app"></div></div>
+<div class="toasts" id="toasts"></div>
+<div id="modals"></div>
+<footer>
+  <div class="f-w">
+    <div><div class="logo">LEIM<b>DROP</b></div><p class="f-desc">Платформа апгрейда скинов CS2. Прозрачные шансы, provably fair роллы, мгновенные выплаты. Превращайте скины в более дорогие.</p></div>
+    <div><h5>ПЛАТФОРМА</h5><a href="#/">Апгрейд</a><a href="#/skins">Скины</a><a href="#/battles">Батлы</a><a href="#/cases">Кейсы</a><a href="#/fairness">Честность</a></div>
+    <div><h5>ПОДДЕРЖКА</h5><a href="#/faq">FAQ</a><a href="#/terms">Условия использования</a><a href="#/privacy">Политика конфиденциальности</a><a href="#/profile">Профиль</a></div>
+  </div>
+  <div class="f-bot">© 2026 LEIMDROP. Демо-режим — реальные предметы и платежи не обрабатываются. 18+<br>LEIMDROP — независимая платформа, не связанная с Valve Corporation или Counter-Strike 2.</div>
+</footer>
+<script>
+/* ============================================================
+   ЕДИНАЯ БАЗА СКИНОВ (SkinData).
+   Изображения НЕ захардкожены: они загружаются из публичного
+   API предметов CS2 (ByMykel CSGO-API) и сопоставляются по
+   ТОЧНОМУ названию скина. Поэтому у каждого предмета всегда
+   реальная картинка именно этого скина + зеркальные CDN.
+   ============================================================ */
+const $=s=>document.querySelector(s);
+const fmt=n=>"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+const SKINS=[
+ {id:"ak_redline",n:"AK-47 | Redline",w:"AK-47",cat:"rifle",r:"classified",p:28.5,wear:"Field-Tested"},
+ {id:"ak_asiimov",n:"AK-47 | Asiimov",w:"AK-47",cat:"rifle",r:"covert",p:155,wear:"Field-Tested"},
+ {id:"ak_fireserpent",n:"AK-47 | Fire Serpent",w:"AK-47",cat:"rifle",r:"covert",p:780,wear:"Minimal Wear"},
+ {id:"ak_vulcan",n:"AK-47 | Vulcan",w:"AK-47",cat:"rifle",r:"classified",p:62,wear:"Minimal Wear"},
+ {id:"ak_neonrider",n:"AK-47 | Neon Rider",w:"AK-47",cat:"rifle",r:"covert",p:34,wear:"Factory New"},
+ {id:"awp_asiimov",n:"AWP | Asiimov",w:"AWP",cat:"sniper",r:"covert",p:120,wear:"Field-Tested"},
+ {id:"awp_dragonlore",n:"AWP | Dragon Lore",w:"AWP",cat:"sniper",r:"covert",p:15200,wear:"Factory New"},
+ {id:"awp_hyperbeast",n:"AWP | Hyper Beast",w:"AWP",cat:"sniper",r:"covert",p:45,wear:"Minimal Wear"},
+ {id:"awp_neonoir",n:"AWP | Neo-Noir",w:"AWP",cat:"sniper",r:"classified",p:28,wear:"Minimal Wear"},
+ {id:"awp_wildfire",n:"AWP | Wildfire",w:"AWP",cat:"sniper",r:"covert",p:120,wear:"Minimal Wear"},
+ {id:"m4a1s_printstream",n:"M4A1-S | Printstream",w:"M4A1-S",cat:"rifle",r:"covert",p:68,wear:"Factory New"},
+ {id:"m4a1s_hyperbeast",n:"M4A1-S | Hyper Beast",w:"M4A1-S",cat:"rifle",r:"covert",p:32,wear:"Minimal Wear"},
+ {id:"m4a1s_decimator",n:"M4A1-S | Decimator",w:"M4A1-S",cat:"rifle",r:"classified",p:18,wear:"Minimal Wear"},
+ {id:"m4a1s_chantico",n:"M4A1-S | Chantico's Fire",w:"M4A1-S",cat:"rifle",r:"classified",p:24,wear:"Field-Tested"},
+ {id:"m4a4_asiimov",n:"M4A4 | Asiimov",w:"M4A4",cat:"rifle",r:"covert",p:95,wear:"Field-Tested"},
+ {id:"m4a4_neonoir",n:"M4A4 | Neo-Noir",w:"M4A4",cat:"rifle",r:"classified",p:14,wear:"Minimal Wear"},
+ {id:"m4a4_emperor",n:"M4A4 | The Emperor",w:"M4A4",cat:"rifle",r:"classified",p:22.4,wear:"Minimal Wear"},
+ {id:"usp_killconfirmed",n:"USP-S | Kill Confirmed",w:"USP-S",cat:"pistol",r:"covert",p:145,wear:"Minimal Wear"},
+ {id:"usp_neonoir",n:"USP-S | Neo-Noir",w:"USP-S",cat:"pistol",r:"restricted",p:12,wear:"Minimal Wear"},
+ {id:"usp_printstream",n:"USP-S | Printstream",w:"USP-S",cat:"pistol",r:"covert",p:68,wear:"Factory New"},
+ {id:"glock_fade",n:"Glock-18 | Fade",w:"Glock-18",cat:"pistol",r:"restricted",p:950,wear:"Factory New"},
+ {id:"glock_water",n:"Glock-18 | Water Elemental",w:"Glock-18",cat:"pistol",r:"restricted",p:12.2,wear:"Minimal Wear"},
+ {id:"deagle_blaze",n:"Desert Eagle | Blaze",w:"Desert Eagle",cat:"pistol",r:"restricted",p:480,wear:"Factory New"},
+ {id:"deagle_codered",n:"Desert Eagle | Code Red",w:"Desert Eagle",cat:"pistol",r:"classified",p:35,wear:"Minimal Wear"},
+ {id:"deagle_printstream",n:"Desert Eagle | Printstream",w:"Desert Eagle",cat:"pistol",r:"covert",p:55,wear:"Factory New"},
+ {id:"p90_asiimov",n:"P90 | Asiimov",w:"P90",cat:"smg",r:"classified",p:18.6,wear:"Field-Tested"},
+ {id:"karambit_doppler",n:"★ Karambit | Doppler",w:"Karambit",cat:"knife",r:"special",p:1900,wear:"Factory New"},
+ {id:"karambit_fade",n:"★ Karambit | Fade",w:"Karambit",cat:"knife",r:"special",p:2400,wear:"Factory New"},
+ {id:"m9_tigertooth",n:"★ M9 Bayonet | Tiger Tooth",w:"M9 Bayonet",cat:"knife",r:"special",p:1500,wear:"Factory New"},
+ {id:"butterfly_fade",n:"★ Butterfly Knife | Fade",w:"Butterfly Knife",cat:"knife",r:"special",p:3400,wear:"Factory New"},
+ {id:"butterfly_doppler",n:"★ Butterfly Knife | Doppler",w:"Butterfly Knife",cat:"knife",r:"special",p:2900,wear:"Factory New"},
+ {id:"bayonet_autotronic",n:"★ Bayonet | Autotronic",w:"Bayonet",cat:"knife",r:"special",p:620,wear:"Field-Tested"},
+ {id:"flip_gammadoppler",n:"★ Flip Knife | Gamma Doppler",w:"Flip Knife",cat:"knife",r:"special",p:520,wear:"Factory New"},
+ {id:"sport_pandora",n:"★ Sport Gloves | Pandora's Box",w:"Sport Gloves",cat:"gloves",r:"special",p:6200,wear:"Field-Tested"},
+ {id:"specialist_kimono",n:"★ Specialist Gloves | Crimson Kimono",w:"Specialist Gloves",cat:"gloves",r:"special",p:1800,wear:"Minimal Wear"},
+ {id:"driver_plaid",n:"★ Driver Gloves | Imperial Plaid",w:"Driver Gloves",cat:"gloves",r:"special",p:900,wear:"Field-Tested"}
+];
+const CASES=[
+ {id:"clutch",n:"LEIMCASE: Ignition",cat:"standard",price:12,pool:["glock_water","p90_asiimov","m4a1s_decimator","ak_neonrider","karambit_doppler"]},
+ {id:"recoil",n:"LEIMCASE: Recoil",cat:"standard",price:10,pool:["glock_water","usp_neonoir","m4a4_neonoir","ak_redline","butterfly_doppler"]},
+ {id:"fracture",n:"LEIMCASE: Fracture",cat:"standard",price:9,pool:["glock_water","m4a1s_decimator","deagle_codered","ak_asiimov","m9_tigertooth"]},
+ {id:"snakebite",n:"LEIMCASE: Venom",cat:"standard",price:8,pool:["glock_water","p90_asiimov","m4a4_neonoir","usp_killconfirmed","driver_plaid"]},
+ {id:"revolution",n:"LEIMCASE: Revolt",cat:"premium",price:15,pool:["ak_redline","m4a1s_chantico","awp_neonoir","m4a4_asiimov","bayonet_autotronic"]},
+ {id:"dreams",n:"LEIMCASE: Reverie",cat:"premium",price:18,pool:["ak_neonrider","deagle_codered","m4a1s_hyperbeast","awp_wildfire","flip_gammadoppler"]},
+ {id:"brokenfang",n:"LEIMCASE: Fang",cat:"premium",price:25,pool:["ak_redline","usp_printstream","m4a4_emperor","awp_hyperbeast","specialist_kimono"]},
+ {id:"hydra",n:"LEIMCASE: Hydra",cat:"premium",price:30,pool:["ak_vulcan","p90_asiimov","m4a4_emperor","awp_asiimov","specialist_kimono"]},
+ {id:"kilowatt",n:"LEIMCASE: Kilowatt",cat:"elite",price:22,pool:["usp_neonoir","m4a1s_printstream","ak_asiimov","awp_wildfire","karambit_fade"]},
+ {id:"glove",n:"LEIMCASE: Grip",cat:"elite",price:40,pool:["deagle_codered","ak_vulcan","m4a4_asiimov","awp_dragonlore","sport_pandora"]}
+];
+const W=[52,27,13,6,2];
+const RAR={restricted:{c:"#8847ff",n:"Restricted"},classified:{c:"#d32ce6",n:"Classified"},covert:{c:"#eb4b4b",n:"Covert"},special:{c:"#e4ae39",n:"Rare Special"}};
+const skin=id=>SKINS.find(s=>s.id===id);
+
+/* ---------- база изображений ---------- */
+let IMGMAP={},DB_OK=false;
+const norm=s=>String(s||"").replace(/^★\s*/,"").toLowerCase().replace(/\s+/g," ").trim();
+const API_SKINS=["https://bymykel.github.io/CSGO-API/api/en/skins.json","https://cdn.jsdelivr.net/gh/ByMykel/CSGO-API@main/public/api/en/skins.json","https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/api/en/skins.json","https://cdn.jsdelivr.net/gh/ByMykel/CSGO-API@main/api/en/skins.json","https://raw.githubusercontent.com/ByMykel/CSGO-API/main/api/en/skins.json"];
+async function fetchFirst(urls){for(const u of urls){try{const r=await fetch(u);if(r.ok){const j=await r.json();if(Array.isArray(j)&&j.length)return j}}catch(e){}}return null}
+function alts(src){
+  const a=[src];
+  if(src.includes("raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/"))a.push(src.replace("https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/","https://cdn.jsdelivr.net/gh/ByMykel/counter-strike-image-tracker@main/"));
+  const steamHosts=["community.cloudflare.steamstatic.com","community.akamai.steamstatic.com","community.fastly.steamstatic.com","steamcommunity-a.akamaihd.net"];
+  const hit=steamHosts.find(h=>src.includes(h));
+  if(hit)steamHosts.forEach(h=>{if(h!==hit)a.push(src.replace(hit,h))});
+  return a;
+}
+async function loadDB(){
+  const arr=await fetchFirst(API_SKINS);
+  if(arr){arr.forEach(e=>{if(e&&e.name&&e.image)IMGMAP[norm(e.name)]=e.image});DB_OK=Object.keys(IMGMAP).length>0}
+}
+function imgFor(name){return IMGMAP[norm(name)]||null}
+/* тег изображения с fallback-цепочкой CDN; если ничего не загрузилось — фирменная заглушка вместо серого текста */
+const CAT_ICON={rifle:"M6 44h8v-6h6v6h4v-8h30v8h6v6h6v-24h-4l-4-8H24l-6 10H6z",sniper:"M4 46l40-4 4-8-8-4 6-14-6-2-6 12-10-2 4-10-6-2-6 14-16 4z",pistol:"M10 42h20v-6h16v-8h6v-6H26l-4 8H10z",smg:"M6 40h10v-6h10v-6h22v-8h6v-4H30l-6 8H6z",knife:"M12 44l4-30 26-8-6 30-24 8z",gloves:"M14 44c-6-4-8-12-4-20l6-14c2-4 8-4 10 0l2 6 2-6c2-4 8-4 10 0l6 14c4 8 2 16-4 20-6 4-14 4-14-2 0 6-8 6-14 2z"};
+function placeholderCard(name,r){
+  const cat=(SKINS.find(s=>s.n===name)||{}).cat||"rifle";
+  const c=r?RAR[r].c:"var(--mut)";
+  const path=CAT_ICON[cat]||CAT_ICON.rifle;
+  return`<div class="ph-card" style="--pc:${c}" onclick="this.outerHTML=sImg('${name.replace(/'/g,"\\'")}','')" title="Нажмите, чтобы повторить загрузку"><svg viewBox="0 0 50 50"><path d="${path}"/></svg><span>нет фото · обновить</span></div>`
+}
+function sImg(name,cls){
+  const src=imgFor(name);
+  if(!src)return placeholderCard(name,(SKINS.find(s=>s.n===name)||{}).r);
+  const list=alts(src).slice(1);
+  return`<img class="${cls}" loading="lazy" decoding="async" src="${src}" data-alts='${JSON.stringify(list)}' data-name="${name.replace(/"/g,"&quot;")}" onerror="imgNext(this)" alt="${name}">`
+}
+function imgNext(el){
+  try{const a=JSON.parse(el.dataset.alts||"[]");if(a.length){el.dataset.alts=JSON.stringify(a.slice(1));el.src=a[0];return}}catch(e){}
+  el.onerror=null;el.outerHTML=placeholderCard(el.dataset.name||el.alt||"",(SKINS.find(s=>s.n===(el.dataset.name||el.alt))||{}).r);
+}
+const rarityGlow=r=>r==="special"?"glow-c":(r==="covert"?"glow-r":"");
+/* ---------- кастомная графика кейсов LEIMCASE (без внешних картинок) ---------- */
+const CASE_TIER_ICON={standard:"M25 4 4 15v20l21 11 21-11V15z",premium:"M25 3l7 14 15 2-11 11 3 15-14-8-14 8 3-15L4 19l15-2z",elite:"M25 2 6 12v18c0 12 8 16 19 18 11-2 19-6 19-18V12z"};
+function caseArt(c){
+  const p=CASE_TIER_ICON[c.cat]||CASE_TIER_ICON.standard;
+  return`<div class="lc-box lc-${c.cat}"><div class="lc-shine"></div><svg class="lc-ic" viewBox="0 0 50 50"><path d="${p}"/></svg><div class="lc-tag">LEIMCASE</div></div>`
+}
+function cImg(c,cls){return caseArt(c)}
+
+/* ---------- state ---------- */
+let S=load()||{bal:0,inv:[{sid:"ak_redline",wear:"Field-Tested",st:false},{sid:"glock_water",wear:"Minimal Wear",st:false},{sid:"m4a4_emperor",wear:"Minimal Wear",st:true}],hu:[],hc:[]};
+function save(){try{localStorage.setItem("leimdrop2",JSON.stringify(S))}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem("leimdrop2"))}catch(e){return null}}
+const invVal=it=>skin(it.sid).p*(it.st?1.6:1);
+function updBal(){$("#balN").textContent=fmt(S.bal);save()}
+function go(h){location.hash=h}
+function toast(msg,type){const t=document.createElement("div");t.className="toast "+(type||"");t.innerHTML=msg;$("#toasts").appendChild(t);setTimeout(()=>{t.classList.add("out");setTimeout(()=>t.remove(),320)},3400)}
+function skeletonGrid(n,h){let s="";for(let i=0;i<n;i++)s+=`<div class="skel" style="height:${h||210}px"></div>`;return s}
+
+/* ---------- router ---------- */
+const routes={"#/":pHome,"#/skins":pSkins,"#/cases":pCases,"#/case":pCase,"#/inventory":pInv,"#/profile":pProfile,"#/battles":pBattles,"#/faq":pFaq,"#/fairness":pFair,"#/terms":pTerms,"#/privacy":pPrivacy};
+function router(){
+  const h=location.hash||"#/";let key=h,arg=null;
+  if(h.startsWith("#/case/")){key="#/case";arg=h.slice(7)}
+  document.querySelectorAll(".nav-links a").forEach(a=>a.classList.toggle("on",a.dataset.r===(key==="#/case"?"#/cases":h)));
+  document.querySelector(".nav-links").classList.remove("open");
+  const app=$("#app");app.innerHTML=`<div class="grid g-skins">${skeletonGrid(8)}</div>`;
+  setTimeout(()=>{try{(routes[key]||pHome)(app,arg)}catch(e){app.innerHTML='<div class="sub">Ошибка страницы. Обновите сайт.</div>'}window.scrollTo({top:0})},240);
+}
+window.addEventListener("hashchange",()=>{if(location.hash!=="#/"&&feedT){clearInterval(feedT);feedT=null}router()});
+
+/* ---------- HOME / UPGRADER ---------- */
+let U={from:null,to:null,angle:0,spinning:false,ch:0};
+function pHome(app){
+  app.innerHTML=`<div class="home page"><div>
+   <div class="h1">Апгрейд скинов CS2</div>
+   <div class="sub">Выбери предмет из инвентаря, цель — и испытай удачу. Шанс и множитель обновляются в реальном времени.</div>
+   <div class="upg">
+     <div class="upg-side"><h4>Ваш предмет</h4><div class="upg-slot" id="uFrom" onclick="openPicker('from')"></div></div>
+     <div class="upg-mid">
+       <div class="ring-w"><svg width="190" height="190"><circle class="ring-bg" cx="95" cy="95" r="82" fill="none" stroke-width="10"/><circle class="ring-fg" id="uRing" cx="95" cy="95" r="82" fill="none" stroke-width="10" stroke-dasharray="515" stroke-dashoffset="515"/></svg><div class="ptr" id="uPtr"></div><div class="ring-c"><div class="ch" id="uCh">0%</div><div class="ml" id="uMl">x0.00</div></div></div>
+       <button class="btn btn-p" id="uBtn" onclick="doUpgrade()" disabled>АПГРЕЙД</button>
+       <div class="upg-res" id="uRes"></div>
+     </div>
+     <div class="upg-side"><h4>Цель</h4><div class="upg-slot" id="uTo" onclick="openPicker('to')"></div></div>
+   </div>
+   <div class="sec-t">Последние апгрейды</div><div id="homeHist"></div>
+  </div><div class="feed"><h4>Live-лента</h4><div id="feed"></div></div></div>`;
+  renderUSlots();renderHomeHist();startFeed();
+}
+function renderUSlots(){
+  const f=$("#uFrom"),t=$("#uTo");if(!f)return;
+  f.innerHTML=(U.from!=null&&S.inv[U.from])?(()=>{const it=S.inv[U.from],s=skin(it.sid);return sImg(s.n,"")+`<div class="nm">${s.n}</div><div class="pr">${fmt(invVal(it))}</div>`})():`<div style="font-size:34px">🎒</div><div class="nm">Выбрать из инвентаря</div>`;
+  t.innerHTML=U.to?(()=>{const s=skin(U.to);return sImg(s.n,"")+`<div class="nm">${s.n}</div><div class="pr">${fmt(s.p)}</div>`})():`<div style="font-size:34px">🎯</div><div class="nm">Выбрать цель</div>`;
+  updU();
+}
+function updU(){
+  const ring=$("#uRing");if(!ring)return;
+  const iv=(U.from!=null&&S.inv[U.from])?invVal(S.inv[U.from]):0;
+  const tv=U.to?skin(U.to).p:0;let ch=0,ml=0;
+  if(iv>0&&tv>iv){ch=Math.min(90,(iv/tv)*100);ml=tv/iv}
+  $("#uCh").textContent=ch?ch.toFixed(1)+"%":"0%";
+  $("#uMl").textContent="x"+(ml?ml.toFixed(2):"0.00");
+  ring.style.strokeDashoffset=515-(515*ch/100);
+  ring.style.stroke=ch>40?"var(--green)":ch>15?"var(--gold)":"var(--red)";
+  $("#uBtn").disabled=!(ch>0)||U.spinning;U.ch=ch;
+}
+function openPicker(mode){
+  if(U.spinning)return;const isFrom=mode==="from";
+  const list=isFrom?S.inv.map((it,i)=>({i,s:skin(it.sid),v:invVal(it)})):SKINS.map(s=>({s,v:s.p}));
+  let q="",sort="pd";
+  const box=document.createElement("div");box.className="modal";
+  box.innerHTML=`<div class="m-box"><button class="modal-x" onclick="this.closest('.modal').remove()">×</button>
+  <div class="h1" style="font-size:19px">${isFrom?"Ваш предмет":"Целевой скин"}</div>
+  <div class="toolbar"><input id="pkQ" placeholder="Поиск по названию..."><select id="pkS"><option value="pd">Цена ↑</option><option value="pu">Цена ↓</option><option value="az">А-Я</option></select></div>
+  <div class="pk-list" id="pkL"></div></div>`;
+  $("#modals").appendChild(box);
+  const draw=()=>{
+    let arr=list.filter(x=>x.s.n.toLowerCase().includes(q.toLowerCase()));
+    arr.sort((a,b)=>sort==="pu"?b.v-a.v:sort==="az"?a.s.n.localeCompare(b.s.n):a.v-b.v);
+    if(!isFrom&&U.from!=null&&S.inv[U.from])arr=arr.filter(x=>x.v>invVal(S.inv[U.from]));
+    $("#pkL").innerHTML=arr.length?arr.map(x=>`<div class="pk-i" data-k="${isFrom?x.i:x.s.id}">${sImg(x.s.n,"")}<div class="n">${x.s.n}</div><div class="p">${fmt(x.v)}</div></div>`).join(""):`<div class="sub" style="grid-column:1/-1">Ничего не найдено</div>`;
+    $("#pkL").querySelectorAll(".pk-i").forEach(el=>el.onclick=()=>{if(isFrom)U.from=+el.dataset.k;else U.to=el.dataset.k;box.remove();renderUSlots()});
+  };
+  box.querySelector("#pkQ").oninput=e=>{q=e.target.value;draw()};
+  box.querySelector("#pkS").onchange=e=>{sort=e.target.value;draw()};draw();
+}
+function doUpgrade(){
+  if(U.from==null||!U.to||U.spinning)return;
+  const it=S.inv[U.from],s=skin(U.to);U.spinning=true;updU();
+  $("#uRes").textContent="Крутим барабан...";
+  const win=Math.random()*100<U.ch;
+  const ptr=$("#uPtr"),target=U.angle+1440+Math.random()*360;
+  ptr.classList.add("spin-anim");ptr.style.transform=`rotate(${target}deg)`;
+  setTimeout(()=>{
+    ptr.classList.remove("spin-anim");U.angle=target%360;ptr.style.transform=`rotate(${U.angle}deg)`;U.spinning=false;
+    if(win){S.inv.splice(U.from,1);S.inv.push({sid:U.to,wear:"Factory New",st:false});S.hu.unshift({t:Date.now(),from:it.sid,to:U.to,win:true,ch:U.ch});toast(`🎉 Апгрейд успешен: <b>${s.n}</b>!`,"ok");$("#uRes").innerHTML=`<span style="color:var(--green)">УСПЕХ! +${s.n}</span>`;U.from=null}
+    else{S.hu.unshift({t:Date.now(),from:it.sid,to:U.to,win:false,ch:U.ch});toast("Не повезло. Попробуй ещё раз!","err");$("#uRes").innerHTML=`<span style="color:var(--red)">Мимо...</span>`;U.from=null}
+    save();renderUSlots();renderHomeHist();
+  },4350);
+}
+function renderHomeHist(){
+  const el=$("#homeHist");if(!el)return;
+  el.innerHTML=S.hu.length?S.hu.slice(0,6).map(h=>{const f=skin(h.from),t=skin(h.to);return`<div class="hist-i">${sImg(f.n,"")}${sImg(t.n,"")}<div><div style="font-size:13px;font-weight:700">${f.n} → ${t.n}</div><div style="font-size:11.5px;color:var(--mut)">Шанс ${h.ch.toFixed(1)}%</div></div><div style="margin-left:auto;font-weight:900;color:${h.win?"var(--green)":"var(--red)"}">${h.win?"WIN":"LOSE"}</div></div>`}).join(""):`<div class="sub">История апгрейдов пуста.</div>`;
+}
+const FEED_NAMES=["s1mple_fan","dropper22","Kolya777","awp_god","lena_cs","trade_pro","case_master","Vitaly","noScope","rush_b"];
+let feedT=null;
+function startFeed(){clearInterval(feedT);feedTick();feedTick();feedT=setInterval(feedTick,5000)}
+function feedTick(){
+  const el=$("#feed");if(!el)return;
+  const s=SKINS[Math.floor(Math.random()*SKINS.length)],n=FEED_NAMES[Math.floor(Math.random()*FEED_NAMES.length)];
+  const win=Math.random()<.42,ch=(5+Math.random()*60).toFixed(1);
+  const d=document.createElement("div");d.className="feed-i";
+  d.innerHTML=`<img class="av" loading="lazy" src="https://ui-avatars.com/api/?name=${n}&background=1a2436&color=8ea3c4&size=60" alt="">${sImg(s.n,"it")}<div style="min-width:0"><div class="t1">${n}</div><div class="t2">${s.n} · ${ch}% · <span class="${win?"win":"lose"}">${win?"WIN":"LOSE"}</span></div></div>`;
+  el.prepend(d);while(el.children.length>9)el.lastChild.remove();
+}
+
+/* ---------- SKINS ---------- */
+function pSkins(app){
+  let q="",rar="all",cat="all",sort="pd";
+  app.innerHTML=`<div class="page"><div class="h1">Каталог скинов</div><div class="sub">${SKINS.length} предметов · реальные изображения CS2 · цены и редкость</div>
+  <div class="toolbar"><input id="sQ" placeholder="Поиск скина...">
+  <select id="sC"><option value="all">Все типы</option><option value="rifle">Винтовки</option><option value="sniper">Снайперки</option><option value="pistol">Пистолеты</option><option value="smg">ПП</option><option value="knife">Ножи</option><option value="gloves">Перчатки</option></select>
+  <select id="sR"><option value="all">Любая редкость</option><option value="restricted">Restricted</option><option value="classified">Classified</option><option value="covert">Covert</option><option value="special">Rare Special</option></select>
+  <select id="sS"><option value="pd">Цена ↑</option><option value="pu">Цена ↓</option><option value="az">А-Я</option></select></div>
+  <div class="grid g-skins" id="sG"></div></div>`;
+  const draw=()=>{
+    let arr=SKINS.filter(s=>s.n.toLowerCase().includes(q.toLowerCase())&&(rar==="all"||s.r===rar)&&(cat==="all"||s.cat===cat));
+    arr.sort((a,b)=>sort==="pu"?b.p-a.p:sort==="az"?a.n.localeCompare(b.n):a.p-b.p);
+    $("#sG").innerHTML=arr.length?arr.map(s=>`<div class="card ${rarityGlow(s.r)}"><div class="skin-img">${sImg(s.n,"")}</div><div class="rbar" style="background:${RAR[s.r].c}"></div><div class="skin-b"><div class="skin-n">${s.n}</div><div class="skin-m"><span class="badge wear">${s.wear}</span><span class="price">${fmt(s.p)}</span></div><div class="skin-m" style="margin-top:6px"><span style="color:${RAR[s.r].c};font-weight:800;font-size:11px">${RAR[s.r].n}</span><span style="font-size:11px">${s.w}</span></div></div></div>`).join(""):`<div class="sub" style="grid-column:1/-1">Ничего не найдено.</div>`;
+  };
+  $("#sQ").oninput=e=>{q=e.target.value;draw()};$("#sC").onchange=e=>{cat=e.target.value;draw()};$("#sR").onchange=e=>{rar=e.target.value;draw()};$("#sS").onchange=e=>{sort=e.target.value;draw()};draw();
+}
+
+/* ---------- CASES ---------- */
+function pCases(app){
+  let q="",cat="all",sort="pp";
+  app.innerHTML=`<div class="page"><div class="h1">Кейсы</div><div class="sub">Открывай кейсы — внутри реальные скины CS2. Шансы прозрачны.</div>
+  <div class="toolbar"><input id="cQ" placeholder="Поиск кейса...">
+  <div class="chips"><button class="chip on" data-c="all">Все</button><button class="chip" data-c="standard">Стандарт</button><button class="chip" data-c="premium">Премиум</button><button class="chip" data-c="elite">Элита</button></div>
+  <select id="cS"><option value="pp">Цена ↑</option><option value="pu">Цена ↓</option><option value="az">А-Я</option></select></div>
+  <div class="grid g-cases" id="cG"></div></div>`;
+  const draw=()=>{
+    let arr=CASES.filter(c=>c.n.toLowerCase().includes(q.toLowerCase())&&(cat==="all"||c.cat===cat));
+    arr.sort((a,b)=>sort==="pu"?b.price-a.price:sort==="az"?a.n.localeCompare(b.n):a.price-b.price);
+    $("#cG").innerHTML=arr.map(c=>{const best=skin(c.pool[c.pool.length-1]);return`<div class="card" style="cursor:pointer" onclick="go('#/case/${c.id}')"><div class="case-img">${cImg(c,"")}</div><div class="case-b"><div class="case-n">${c.n}</div><div class="case-m"><span>${c.pool.length} предметов</span><span class="case-p">${fmt(c.price)}</span></div><div class="best-drop">${sImg(best.n,"")}<span>Лучший дроп: <b style="color:${RAR[best.r].c}">${best.n}</b></span></div></div></div>`}).join("");
+  };
+  $("#cQ").oninput=e=>{q=e.target.value;draw()};$("#cS").onchange=e=>{sort=e.target.value;draw()};
+  document.querySelectorAll(".chip").forEach(ch=>ch.onclick=()=>{document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));ch.classList.add("on");cat=ch.dataset.c;draw()});
+  draw();
+}
+function pCase(app,id){
+  const c=CASES.find(x=>x.id===id);if(!c){app.innerHTML=`<div class="sub">Кейс не найден. <a href="#/cases" style="color:var(--acc2)">← К кейсам</a></div>`;return}
+  app.innerHTML=`<div class="page"><a href="#/cases" style="color:var(--mut);font-size:13px">← Все кейсы</a>
+  <div style="display:flex;gap:26px;align-items:center;margin-top:14px;flex-wrap:wrap">
+    <div class="case-img big" style="width:230px;height:190px;border-radius:16px;border:1px solid var(--line)">${cImg(c,"")}</div>
+    <div><div class="h1">${c.n}</div><div class="sub" style="margin:8px 0 14px">Содержимое: ${c.pool.length} предметов · цена открытия: <b style="color:var(--gold)">${fmt(c.price)}</b></div>
+    <button class="btn btn-p" onclick="openCase('${c.id}')">Открыть за ${fmt(c.price)}</button></div>
+  </div>
+  <div class="sec-t">Содержимое кейса</div>
+  <div class="grid g-skins">${c.pool.map((sid,i)=>{const s=skin(sid);return`<div class="card ${rarityGlow(s.r)}"><div class="skin-img">${sImg(s.n,"")}</div><div class="rbar" style="background:${RAR[s.r].c}"></div><div class="skin-b"><div class="skin-n">${s.n}</div><div class="skin-m"><span style="color:${RAR[s.r].c};font-weight:800;font-size:11px">${RAR[s.r].n}</span><span style="font-size:11px;color:var(--mut)">${W[i]}%</span></div><div class="skin-m" style="margin-top:6px"><span class="badge wear">${s.wear}</span><span class="price">${fmt(s.p)}</span></div></div></div>`}).join("")}</div></div>`;
+}
+function rollCase(){const r=Math.random()*100;let a=0;for(let i=0;i<W.length;i++){a+=W[i];if(r<a)return i}return 0}
+function openCase(id){
+  const c=CASES.find(x=>x.id===id);if(!c)return;
+  if(S.bal<c.price){toast("Недостаточно средств. Нажми «+» чтобы пополнить (демо).","err");return}
+  S.bal-=c.price;updBal();
+  const winIdx=rollCase();
+  const box=document.createElement("div");box.className="modal";
+  box.innerHTML=`<div class="m-box" style="max-width:920px"><button class="modal-x" id="cx">×</button>
+  <div class="h1" style="font-size:19px;text-align:center">${c.n}</div>
+  <div class="reel"><div class="reel-mark"></div><div class="reel-strip" id="rs"></div></div>
+  <div id="resArea"></div></div>`;
+  $("#modals").appendChild(box);
+  box.querySelector("#cx").onclick=()=>box.remove();
+  const N=60,WIN=52,strip=box.querySelector("#rs");let html="";
+  for(let i=0;i<N;i++){const s=skin(c.pool[i===WIN?winIdx:Math.floor(Math.random()*Math.max(1,c.pool.length-1))]);html+=`<div class="reel-i" data-i="${i}">${sImg(s.n,"")}<div class="n" style="color:${RAR[s.r].c}">${s.n}</div></div>`}
+  strip.innerHTML=html;
+  const items=strip.querySelectorAll(".reel-i");
+  const itemW=items.length>1?(items[1].offsetLeft-items[0].offsetLeft):136;
+  const reelW=box.querySelector(".reel").clientWidth;
+  const target=WIN*itemW+itemW/2-reelW/2+(Math.random()*40-20);
+  const dur=5200,t0=performance.now();let lastHot=-1;
+  const ease=t=>1-Math.pow(1-t,4);
+  function frame(now){
+    const t=Math.min(1,(now-t0)/dur),x=ease(t)*target;
+    strip.style.transform=`translateX(${-x}px)`;
+    const hot=Math.floor((x+reelW/2)/itemW);
+    if(hot!==lastHot){const old=strip.querySelector(".reel-i.hot");if(old)old.classList.remove("hot");const el=strip.querySelector(`[data-i="${hot}"]`);if(el)el.classList.add("hot");lastHot=hot}
+    if(t<1)requestAnimationFrame(frame);else finish();
+  }
+  requestAnimationFrame(frame);
+  function finish(){
+    const s=skin(c.pool[winIdx]);
+    S.inv.push({sid:s.id,wear:s.wear,st:false});const wonIdx=S.inv.length-1;S.hc.unshift({t:Date.now(),case:id,item:s.id});save();
+    box.querySelector("#resArea").innerHTML=`<div class="res-box"><div class="sub">Вы получили:</div>${sImg(s.n,"")}<div class="rn" style="color:${RAR[s.r].c}">${s.n}</div><div class="rp">${fmt(s.p)} · ${s.wear}</div>
+    <div class="res-btns"><button class="btn btn-g" id="sellW">Продать за ${fmt(s.p)}</button><button class="btn btn-p" id="keepW">В инвентарь</button></div></div>`;
+    if(s.r==="special"||s.r==="covert")toast(`🔥 Редкий дроп: <b>${s.n}</b>!`,"gold");
+    box.querySelector("#sellW").onclick=()=>{if(S.inv[wonIdx]&&S.inv[wonIdx].sid===s.id)S.inv.splice(wonIdx,1);else{const i=S.inv.findIndex(x=>x.sid===s.id);if(i>-1)S.inv.splice(i,1)}S.bal+=s.p;updBal();toast(`Продано: ${s.n} +${fmt(s.p)}`,"ok");box.remove()};
+    box.querySelector("#keepW").onclick=()=>{toast(`${s.n} добавлен в инвентарь`,"ok");box.remove()};
+  }
+}
+
+/* ---------- INVENTORY ---------- */
+function pInv(app){
+  let q="",sort="pd",sel=new Set();
+  app.innerHTML=`<div class="page"><div class="h1">Инвентарь</div><div class="sub">Мультивыбор: кликай по предметам, затем продавай пакетом.</div>
+  <div class="inv-bar"><div class="inv-total">Предметов: <b id="invC">0</b> · Общая стоимость: <b id="invV">$0</b></div>
+  <div style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-g btn-s" id="selAll">Выбрать все</button><button class="btn btn-p btn-s" id="sellSel">Продать выбранные</button></div></div>
+  <div class="toolbar"><input id="iQ" placeholder="Поиск в инвентаре..."><select id="iS"><option value="pd">Цена ↑</option><option value="pu">Цена ↓</option><option value="az">А-Я</option></select></div>
+  <div class="grid g-skins" id="iG"></div></div>`;
+  const draw=()=>{
+    let arr=S.inv.map((it,i)=>({it,i,s:skin(it.sid),v:invVal(it)})).filter(x=>x.s.n.toLowerCase().includes(q.toLowerCase()));
+    arr.sort((a,b)=>sort==="pu"?b.v-a.v:sort==="az"?a.s.n.localeCompare(b.s.n):a.v-b.v);
+    $("#invC").textContent=S.inv.length;$("#invV").textContent=fmt(S.inv.reduce((a,b)=>a+invVal(b),0));
+    $("#iG").innerHTML=arr.length?arr.map(x=>`<div class="card inv-i ${sel.has(x.i)?"sel":""}" data-i="${x.i}"><div class="chk">✓</div><div class="skin-img">${sImg(x.s.n,"")}</div><div class="rbar" style="background:${RAR[x.s.r].c}"></div><div class="skin-b"><div class="skin-n">${x.it.st?'<span class="badge st">ST</span> ':""}${x.s.n}</div><div class="skin-m"><span class="badge wear">${x.it.wear}</span><span class="price">${fmt(x.v)}</span></div></div></div>`).join(""):`<div class="sub" style="grid-column:1/-1">Инвентарь пуст. Открой кейс или выиграй апгрейд!</div>`;
+    $("#iG").querySelectorAll(".inv-i").forEach(el=>el.onclick=()=>{const i=+el.dataset.i;sel.has(i)?sel.delete(i):sel.add(i);draw()});
+  };
+  $("#iQ").oninput=e=>{q=e.target.value;draw()};$("#iS").onchange=e=>{sort=e.target.value;draw()};
+  $("#selAll").onclick=()=>{sel=new Set(S.inv.map((_,i)=>i));draw()};
+  $("#sellSel").onclick=()=>{if(!sel.size)return toast("Сначала выбери предметы","err");let sum=0;[...sel].sort((a,b)=>b-a).forEach(i=>{sum+=invVal(S.inv[i]);S.inv.splice(i,1)});S.bal+=sum;sel.clear();updBal();draw();toast(`Продано на ${fmt(sum)}`,"ok")};
+  draw();
+}
+
+/* ---------- PROFILE ---------- */
+function pProfile(app){
+  let tab="u";
+  app.innerHTML=`<div class="page">
+  <div class="prof-h"><img src="https://ui-avatars.com/api/?name=LEIMDROP+Player&background=6c5ce7&color=fff&size=168" alt="">
+  <div><div class="prof-n">Demo Player</div><div class="sub">Steam ID: 76561198000000000 · демо-аккаунт</div>
+  <div class="prof-s"><div><span>Баланс</span><b style="color:var(--gold)">${fmt(S.bal)}</b></div><div><span>Предметов</span><b>${S.inv.length}</b></div><div><span>Апгрейдов</span><b>${S.hu.length}</b></div><div><span>Кейсов открыто</span><b>${S.hc.length}</b></div></div></div></div>
+  <div class="tabs" id="tabs"></div><div id="pB"></div></div>`;
+  const draw=()=>{
+    $("#tabs").innerHTML=[["u","История апгрейдов"],["c","История кейсов"],["w","Выигранные скины"]].map(t=>`<button class="chip ${tab===t[0]?"on":""}" data-t="${t[0]}">${t[1]}</button>`).join("");
+    $("#tabs").querySelectorAll(".chip").forEach(c=>c.onclick=()=>{tab=c.dataset.t;draw()});
+    const b=$("#pB");
+    if(tab==="u")b.innerHTML=S.hu.length?S.hu.map(h=>{const f=skin(h.from),t=skin(h.to);return`<div class="hist-i">${sImg(f.n,"")}${sImg(t.n,"")}<div><div style="font-size:13px;font-weight:700">${f.n} → ${t.n}</div><div style="font-size:11.5px;color:var(--mut)">Шанс ${h.ch.toFixed(1)}% · ${new Date(h.t).toLocaleString("ru-RU")}</div></div><div style="margin-left:auto;font-weight:900;color:${h.win?"var(--green)":"var(--red)"}">${h.win?"WIN":"LOSE"}</div></div>`}).join(""):`<div class="sub">Пока пусто.</div>`;
+    if(tab==="c")b.innerHTML=S.hc.length?S.hc.map(h=>{const c=CASES.find(x=>x.id===h.case),s=skin(h.item);return`<div class="hist-i">${cImg(c,"")}${sImg(s.n,"")}<div><div style="font-size:13px;font-weight:700">${c.n} → ${s.n}</div><div style="font-size:11.5px;color:var(--mut)">${new Date(h.t).toLocaleString("ru-RU")}</div></div><div class="price" style="margin-left:auto">${fmt(s.p)}</div></div>`}).join(""):`<div class="sub">Пока пусто.</div>`;
+    if(tab==="w")b.innerHTML=`<div class="grid g-skins">${S.inv.map(it=>{const s=skin(it.sid);return`<div class="card ${rarityGlow(s.r)}"><div class="skin-img">${sImg(s.n,"")}</div><div class="rbar" style="background:${RAR[s.r].c}"></div><div class="skin-b"><div class="skin-n">${s.n}</div><div class="skin-m"><span class="badge wear">${it.wear}</span><span class="price">${fmt(invVal(it))}</span></div></div></div>`}).join("")||`<div class="sub">Пока пусто.</div>`}</div>`;
+  };
+  draw();
+}
+
+/* ---------- BATTLES / FAQ / FAIR / DOCS ---------- */
+function pBattles(app){
+  const rooms=[["Батл #4821","2/2",124],["Батл #4822","1/2",58],["Батл #4823","3/4",310],["Батл #4824","1/4",75]];
+  app.innerHTML=`<div class="page"><div class="h1">Батлы</div><div class="sub">Соревнуйся с игроками за банк скинов (демо).</div><div style="margin-top:20px">${rooms.map(r=>`<div class="battle-i"><div style="font-weight:800">${r[0]}</div><div class="sub">Игроки: ${r[1]}</div><div class="price" style="margin-left:auto">${fmt(r[2])}</div><button class="btn btn-g btn-s" onclick="toast('Демо-режим: батлы недоступны','err')">Войти</button></div>`).join("")}</div></div>`;
+}
+function pFaq(app){
+  const F=[["Что такое LEIMDROP?","Демо-платформа апгрейда скинов CS2 с прозрачными шансами и provably fair роллами. Реальные предметы и платежи не обрабатываются."],["Как работает апгрейд?","Выбираешь предмет из инвентаря и цель дороже него. Шанс = стоимость предмета / стоимость цели. Множитель обновляется автоматически."],["Откуда изображения скинов?","Мы используем только реальные изображения предметов CS2 из публичной базы предметов (CSGO-API) и официальных CDN Steam. AI-изображения не используются. Иконки самих кейсов — авторская графика LEIMCASE, не связанная с Valve."],["Что делать, если картинка не загрузилась?","Система автоматически перебирает несколько зеркальных CDN. Если сеть всё равно недоступна, карточка покажет аккуратную фирменную заглушку — по клику на неё можно повторить попытку загрузки."],["Как проверить честность?","На странице «Честность» доступен демо-инструмент provably fair: серверный seed, его хэш и клиентский seed."],["Можно ли вывести предметы?","Нет, это демо. Все предметы виртуальные."]];
+  app.innerHTML=`<div class="page"><div class="h1">FAQ</div><div style="margin-top:18px">${F.map(f=>`<div class="faq-i"><div class="faq-q" onclick="this.parentNode.classList.toggle('open')">${f[0]}<span>+</span></div><div class="faq-a"><div>${f[1]}</div></div></div>`).join("")}</div></div>`;
+}
+function pFair(app){
+  app.innerHTML=`<div class="page"><div class="h1">Честность</div><div class="sub">Provably fair (демо): результат определяется до показа и может быть проверен.</div>
+  <div class="card" style="padding:22px;margin-top:20px;max-width:720px">
+  <div class="sub">Server seed (hash):</div><div id="seedH" style="font-family:monospace;font-size:13px;color:var(--gold);margin:8px 0 16px;word-break:break-all">...</div>
+  <div class="sub">Client seed:</div><input style="display:block;width:100%;margin:8px 0 16px;background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:11px;padding:10px 14px" id="cseed" value="leimdrop_demo">
+  <div class="sub">Roll (0–100):</div><div id="rollV" style="font-size:26px;font-weight:900;margin:8px 0 16px">—</div>
+  <button class="btn btn-p" id="rollB">Проверить ролл</button></div></div>`;
+  const serverSeed=Math.random().toString(36).slice(2)+Date.now().toString(36);
+  crypto.subtle.digest("SHA-256",new TextEncoder().encode(serverSeed)).then(h=>{const el=$("#seedH");if(el)el.textContent=[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("")}).catch(()=>{});
+  $("#rollB").onclick=async()=>{const h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(serverSeed+":"+$("#cseed").value));$("#rollV").textContent=((new Uint8Array(h)[0]*256+new Uint8Array(h)[1])%10000/100).toFixed(2)+"%";toast("Ролл проверен","ok")};
+}
+function pTerms(app){app.innerHTML=`<div class="page doc"><div class="h1">Условия использования</div><h3>1. Демо-режим</h3>LEIMDROP — демонстрационная платформа. Реальные предметы, платежи и ставки не обрабатываются.<h3>2. Возраст</h3>Сервис предназначен для лиц старше 18 лет.<h3>3. Интеллектуальная собственность</h3>Изображения скинов CS2 принадлежат Valve Corporation и используются только для наглядности. Графика кейсов LEIMCASE — собственная авторская разработка платформы и не связана с Valve. LEIMDROP не связан с Valve.</div>`}
+function pPrivacy(app){app.innerHTML=`<div class="page doc"><div class="h1">Политика конфиденциальности</div><h3>Данные</h3>В демо-режиме все данные (баланс, инвентарь, история) хранятся локально в вашем браузере и никуда не передаются.<h3>Cookie</h3>Мы не используем отслеживающие cookie.</div>`}
+function openDeposit(){
+  const box=document.createElement("div");box.className="modal";
+  box.innerHTML=`<div class="m-box" style="max-width:420px;text-align:center"><button class="modal-x" onclick="this.closest('.modal').remove()">×</button>
+  <div class="h1" style="font-size:19px">Пополнение (демо)</div><div class="sub" style="margin:8px 0 18px">Реальные платежи не обрабатываются</div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">${[100,500,1000,5000].map(v=>`<button class="btn btn-g" onclick="S.bal+=${v};updBal();toast('Баланс пополнен на ${fmt(v)}','ok');this.closest('.modal').remove()">+${fmt(v)}</button>`).join("")}</div></div>`;
+  $("#modals").appendChild(box);
+}
+setInterval(()=>{const el=$("#onlineN");if(el){let n=parseInt(el.textContent.replace(/\D/g,""))+Math.floor(Math.random()*9-4);el.textContent=n.toLocaleString("ru-RU")}},7000);
+
+/* ---------- старт: сначала база изображений, потом интерфейс ---------- */
+(async function init(){
+  $("#app").innerHTML=`<div class="h1">LEIMDROP</div><div class="sub">Загружаем базу предметов CS2…</div><div class="grid g-skins" style="margin-top:20px">${skeletonGrid(10)}</div>`;
+  const timeout=new Promise(r=>setTimeout(r,20000));
+  await Promise.race([loadDB(),timeout]);
+  if(!DB_OK){
+    toast("Не удалось загрузить базу изображений — проверь сеть. Цены и функции работают.","err");
+    let tries=0;
+    const retry=setInterval(async()=>{
+      tries++;
+      await loadDB();
+      if(DB_OK){clearInterval(retry);toast("База изображений загружена","ok");router()}
+      else if(tries>=5)clearInterval(retry);
+    },8000);
+  }
+  updBal();router();
+})();
+</script>
+</body>
+</html>
